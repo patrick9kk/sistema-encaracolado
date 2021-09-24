@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import datetime
 import plotly.graph_objects as go
-m = pd.read_csv('Meses.txt', delimiter="\s+",engine='python',header=None)
 Q = pd.read_csv('MGB-IPH_DischargeData_AmazonBasin.txt', delimiter="\s+",engine='python',header=None)
 ti='1998-01-01'
 tf='2009-12-31'
