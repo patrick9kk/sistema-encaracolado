@@ -1,0 +1,83 @@
+import pandas as pd
+import numpy as np
+import datetime
+import plotly.graph_objects as go
+m = pd.read_csv('Meses.txt', delimiter="\s+",engine='python',header=None)
+Q = pd.read_csv('MGB-IPH_DischargeData_AmazonBasin.txt', delimiter="\s+",engine='python',header=None)
+ti='1998-01-01'
+tf='2009-12-31'
+date = pd.date_range(start=ti, end=tf, freq='D')
+Q['date'] = date
+Q.set_index('date', inplace=True)
+
+
+np_array = Q.to_numpy() # transforma o DataFrame em um array
+media = 0 # meida inicial 
+list_med = [] # lista de media amarzenadas 
+att = 0 # atualizar cod ao final da contagem 
+ano_escolhido = int(input(' Defina o ano '))
+# base de dados contendo os possiveis anos a serem escolidos 
+if ano_escolhido == 1998:
+    ano_escolhido = 0
+if ano_escolhido == 1999:
+    ano_escolhido = 365
+if ano_escolhido == 2000:
+    ano_escolhido = 741
+if ano_escolhido == 2001:
+    ano_escolhido = 1096
+if ano_escolhido == 2002:
+    ano_escolhido = 1461
+if ano_escolhido == 2003:
+    ano_escolhido = 1826
+if ano_escolhido == 2004:
+    ano_escolhido = 2192
+if ano_escolhido == 2005:
+    ano_escolhido = 2557
+if ano_escolhido == 2006:
+    ano_escolhido = 2922
+if ano_escolhido == 2007:
+    ano_escolhido = 3287
+if ano_escolhido == 2008:
+    ano_escolhido = 3653
+if ano_escolhido == 2009:
+    ano_escolhido = 4018
+
+    
+mesesUser = int(input (' escreva o último mes do intervalo de tempo a ser analizado ')) # meses que o usuario pode escolher de 1 a 12
+meses = [x+1 for x in range(mesesUser)]
+for j in range(mesesUser):
+    for i in range(31): # for que percorre todos definidos pelo usuário
+        media += np_array[i+att+ano_escolhido][0]
+    media = media/31 # media alritimetica 
+    list_med.append(media)
+    media = 0
+    att += 31 # sistema de soma paradar continuidade na contagem 
+df = list_med
+
+# meses para o grafico mostra no eixo 
+m_e=['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+
+import plotly.offline as py
+import plotly.graph_objs as go
+
+#  Parâmetro opacity e width
+data = [go.Bar(x=m_e,
+               y=df,
+               marker = {'color': 'blue',
+                         'line': {'color': '#FFFFFF',
+                                  'width': 1}
+                        },
+               opacity= 0.6
+              )
+       ]
+
+# Layout
+configuracoes_layout = go.Layout(title='Média das Vazões Mensais',
+                                 yaxis={'title':'m³/s'},
+                                 xaxis={'title':'Meses'})
+
+# figura
+fig = go.Figure(data=data, layout=configuracoes_layout)
+
+# plotando o grafico:
+py.iplot(fig)
